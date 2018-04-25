@@ -18,7 +18,8 @@ s.summary      = "一个流畅的链式请求框架（基于AFNetworking实现�
 ##项目主页
 s.homepage     = "https://github.com/Jerry-Zed/WKJNetworking"
 ##仓库地址
-s.source       = { :git => "https://github.com/Jerry-Zed/WKJNetworking.git", :tag => "# {s.version}" }
+s.source       = { :git => "https://github.com/Jerry-Zed/WKJNetworking.git",
+                   :tag => "#{s.version}" }
 ##项目源的位置
 s.source_files = "WKJNetworking/*.{h,m}"
 ##是否启用ARC
