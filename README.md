@@ -27,15 +27,15 @@
 		 */
 		 [WKJNetworking registResponseBlock:^(id respones, RequestSuccess rs, RequestFail rf) {
 		 
-        	if ([respones[@"resultcode"] intValue] == 200) {
+        if ([respones[@"resultcode"] intValue] == 200) {
             	rs(respones[@"result"]);
-        	}
-        	else {
+        }
+        else {
             	NSError *error = [NSError errorWithDomain:respones[@"reason"]
                                                  code:[respones[@"resultcode"] intValue]
                                              userInfo:nil];
             	rf(error);
-        	}
+        }
     	 }];
 	
 3. 开始请求
