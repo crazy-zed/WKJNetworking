@@ -49,8 +49,9 @@ typedef WKJBuilder *(^WKJTimeout)(NSTimeInterval sec);
 typedef WKJBuilder *(^WKJRequestType)(WKJMediaType requestType);
 typedef WKJBuilder *(^WKJResponseType)(WKJMediaType responesType);
 typedef WKJBuilder *(^WKJHeader)(NSDictionary *header);
+typedef WKJBuilder *(^WKJCached)(BOOL shouldCache);
 
-typedef WKJRequest *(^WKJRequestStart)(BOOL cached);
+typedef WKJRequest *(^WKJRequestStart)(void);
 
 // WKJRequest对象所属
 typedef WKJResponse *(^WKJGet)(NSDictionary *params);
@@ -81,7 +82,7 @@ typedef WKJResponse *(^WKJProgress)(RequestProgress rp);
 + (void)registBaseURL:(NSString *)baseURL;
 
 /** 注册自定义网络响应回调，可根据原有相应数据在做自定义处理，success参数： id respones（原有响应数据） RequestSuccess rs（成功回调） RequestFail rf（失败回调） */
-+ (void)registResponseBlock:(WKJCustomerResponse)success;
++ (void)registResponseBlock:(WKJCustomerResponse)customResponse;
 
 /** 暂停所有请求 */
 + (void)suspendAllRequest;
@@ -119,7 +120,10 @@ typedef WKJResponse *(^WKJProgress)(RequestProgress rp);
 /** 设置请求头，参数为“NSDictionary” */
 @property (nonatomic, copy, readonly) WKJHeader header;
 
-/** 开始请求并设置是否缓存，参数为“BOOL”*/
+/** 设置是否缓存，参数为“BOOL” */
+@property (nonatomic, copy, readonly) WKJCached cache;
+
+/** 开始请求 */
 @property (nonatomic, copy, readonly) WKJRequestStart request;
 
 @end

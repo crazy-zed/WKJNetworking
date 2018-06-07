@@ -15,8 +15,6 @@
 
 + (void)setHttpCache:(id)data URL:(NSString *)URL
 {
-    if (![data isKindOfClass:[NSDictionary class]]) return;
-    
     NSString *dirPath = [self getCachePath];
     NSFileManager *fm = [NSFileManager defaultManager];
     NSError *error = nil;
@@ -31,7 +29,7 @@
     }
     
     NSString *path = [dirPath stringByAppendingPathComponent:[self getMD5String:URL]];
-    BOOL isOk = [data writeToFile:path atomically:YES];
+    BOOL isOk = [NSKeyedArchiver archiveRootObject:data toFile:path];
     
     if (isOk) {
         WKJLog(@"save cache at:%@",dirPath);
@@ -46,7 +44,7 @@
     NSString *dirPath = [self getCachePath];
     NSString *path = [dirPath stringByAppendingPathComponent:[self getMD5String:URL]];
     
-    NSDictionary *cache = [NSDictionary dictionaryWithContentsOfFile:path];
+    id cache = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
     return cache;
 }
 

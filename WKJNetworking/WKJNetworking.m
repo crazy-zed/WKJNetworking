@@ -21,6 +21,8 @@
 
 @property (nonatomic, assign) WKJMediaType wkj_responseType;
 
+@property (nonatomic, assign) BOOL shouldCached;
+
 @property (nonatomic, strong) NSDictionary *wkj_header;
 
 @property (nonatomic, strong) AFHTTPSessionManager *manager;
@@ -78,15 +80,24 @@
     };
 }
 
+- (WKJCached)cache
+{
+    __weak typeof(self) weakSelf = self;
+    return ^(BOOL shouldCached) {
+        weakSelf.shouldCached = shouldCached;
+        return weakSelf;
+    };
+}
+
 - (WKJRequestStart)request
 {
     __weak typeof(self) weakSelf = self;
-    return ^(BOOL cached) {
+    return ^(void) {
         [weakSelf setupManager];
         
         WKJRequest *req = [WKJRequest new];
         [req setValue:weakSelf forKey:@"builder"];
-        [req setValue:@(cached) forKey:@"cached"];
+        [req setValue:@(weakSelf.shouldCached) forKey:@"cached"];
         
         WKJResponse *rsp = [WKJResponse new];
         [req setValue:rsp forKey:@"rsp"];
@@ -478,9 +489,9 @@ static WKJBuilder *wkj_globalBulider;
     }
 }
 
-+ (void)registResponseBlock:(WKJCustomerResponse)responseblock
++ (void)registResponseBlock:(WKJCustomerResponse)customResponse
 {
-    [self globalBuilder].responseBlock = responseblock;
+    [self globalBuilder].responseBlock = customResponse;
 }
 
 + (void)suspendAllRequest
