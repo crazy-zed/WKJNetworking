@@ -32,5 +32,5 @@ s.frameworks   = "UIKit", "Foundation"
 s.dependency 'AFNetworking','~>3.2'
 ##个人信息
 s.author             = { "WKJ" => "843377736@qq.com" }
-s.social_media_url   = "https://www.wkjstudio.com"
+#s.social_media_url   = "https://www.wkjstudio.com"
 end
