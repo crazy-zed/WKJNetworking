@@ -9,8 +9,9 @@
 ## 使用方法
 1. 注册基础URL
 
-	注册基础请求地址（前缀，如“https://api.xxx.com”），在AppDelegate（保证在所有请求开始之前调用即可）添加以下方法：
+	注册基础请求地址（前缀），在AppDelegate（保证在所有请求开始之前调用即可）添加以下方法：
 	
+		//如“https://api.xxx.com”
 		[WKJNetworking registBaseURL:@"Your BaseURL"];
 		
 2. 注册自定请求响应回调
@@ -31,9 +32,9 @@
         	}
         	else {
             	NSError *error = [NSError errorWithDomain:respones[@"reason"]
-                                                 	code:[respones[@"resultcode"] intValue]
-                                             	userInfo:nil];
-            rf(error);
+                                                 code:[respones[@"resultcode"] intValue]
+                                             userInfo:nil];
+            	rf(error);
         	}
     	 }];
 	
@@ -41,27 +42,34 @@
 
 	注册过baseURL后则可以再项目中使用 **global(@"subURL")** 构建请求，方法如下：
 	
-		// 该请求完整URL为：http://web.juhe.cn:8080/finance/exchange/rmbquot
+		//该请求完整URL为：http://web.juhe.cn:8080/finance/exchange/rmbquot
     	NSDictionary *params = @{@"key":@"31e52c8179a83852a0f9b8846fd86b11"};
     	
     	WKJNetworking
-    	// 使用全局构建对象，传入子URL即可
+    	//使用全局构建对象，传入子URL即可
     	.global(@"rmbquot")
-    	// 设置请求头
+    	
+    	//设置请求头
     	.header(@{@"testKey":@"is test header"})
-    	// 设置超时时间
+    	
+    	//设置超时时间
     	.timeout(10)
-    	// 设置是否缓存（如果为YES，success回调会调用两次）
+    	
+    	//设置是否缓存（如果为YES，success回调会调用两次）
     	.cache(YES)
-    	// 开始请求
+    	
+    	//开始请求
     	 .request()
-    	// 使用GET方法，传入请求参数（更多方法请查看WKJNetworking.h文件）
+    	 
+    	//使用GET方法，传入请求参数（更多方法请查看WKJNetworking.h文件）
     	.get(params)
-    	// 成功回调，该block不会发生循环引用
+    	
+    	//成功回调，该block不会发生循环引用
     	.success(^(id respones) {
         	self.responseView.text = [respones description];
     	})
-    	// 失败回调，该block不会发生循环引用
+    	
+    	//失败回调，该block不会发生循环引用
    		.fail(^(NSError *error) {
         	self.responseView.text = error.domain;
     	});
