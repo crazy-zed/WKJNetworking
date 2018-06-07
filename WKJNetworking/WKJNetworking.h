@@ -120,7 +120,7 @@ typedef WKJResponse *(^WKJProgress)(RequestProgress rp);
 /** 设置请求头，参数为“NSDictionary” */
 @property (nonatomic, copy, readonly) WKJHeader header;
 
-/** 设置是否缓存，参数为“BOOL” */
+/** 设置是否缓存，参数为“BOOL”（默认为NO）*/
 @property (nonatomic, copy, readonly) WKJCached cache;
 
 /** 开始请求 */

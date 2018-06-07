@@ -39,6 +39,7 @@
 {
     WKJBuilder *builder = [[WKJBuilder alloc] init];
     builder.wkj_timeoutSec = 15;
+    builder.shouldCached = NO;
     builder.wkj_requestType = WKJMediaTypeFORM;
     builder.wkj_responseType = WKJMediaTypeJSON;
     return builder;
