@@ -25,17 +25,17 @@
 	[WKJNetworking registResponseBlock:^(id respones, NSError *error, RequestSuccess rs, RequestFail rf) {
 		// 处理网络错误回调
    		if (error.code == -1009) {
-   		NSError *error = [NSError errorWithDomain:@"无网络连接" code:-1009 userInfo:nil];
- 		rf(error);
-   		return;
+   			NSError *error = [NSError errorWithDomain:@"无网络连接" code:-1009 userInfo:nil];
+ 			rf(error);
+   			return;
   		}
  		// 处理业务逻辑回调
    		if ([respones[@"code"] intValue] == 200) {
-   		rs(respones[@"data"]);
+   			rs(respones[@"data"]);
    		}
   		else {
-   		NSError *error = [NSError errorWithDomain:respones[@"msg"] code:[respones[@"code"] intValue] userInfo:nil];
-		rf(error);
+   			NSError *error = [NSError errorWithDomain:respones[@"msg"] code:[respones[@"code"] intValue] userInfo:nil];
+			rf(error);
   		}
    	}];
 	
