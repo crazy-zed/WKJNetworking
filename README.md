@@ -7,12 +7,14 @@
 	pod 'WKJNetworking', '~> 1.0.2'
 
 ## 使用方法
-###1. 注册基础URL
+### 1. 注册基础URL
+
 注册基础请求地址（前缀），在AppDelegate（保证在所有请求开始之前调用即可）添加以下方法：
 	
 	[WKJNetworking registBaseURL:@"Your BaseURL"];
 		
-###2. 注册自定请求响应回调
+### 2. 注册自定请求响应回调
+
 可以根据公司的业务逻辑及接口的数据结构自定义响应回调的调用时机以及返回值，在AppDelegate（保证在所有请求开始之前调用即可）添加以下方法：
 		
 	/* 某接口返回数据格式如下：
@@ -39,7 +41,8 @@
   		}
    	}];
 	
-###3. 开始请求
+### 3. 开始请求
+
 1.通过 **global** 构建请求，该方式可以在注册过BaseURL或提前设置好Header，Timeout等参数后直接开始请求，该方式只要设置一次全局使用。
 
 	WKJNetworking.global(@"rmbquot").request()
