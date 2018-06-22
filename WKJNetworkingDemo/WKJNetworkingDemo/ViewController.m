@@ -28,7 +28,6 @@
 {
     // 使用global构建请求
     [self globalRequest];
-    
     // 使用builder构建请求
 //    [self builderRequest];
 }
