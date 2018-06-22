@@ -101,7 +101,7 @@
         
         NSString *key = [WKJNetCache getMD5String:weakSelf.wkj_fullURL];
         NSNumber *cached = [weakSelf.cacheInfo objectForKey:key];
-        cached = cached ? cached : NO;
+        cached = cached ? cached : @(NO);
         [req setValue:cached forKey:@"cached"];
         
         WKJResponse *rsp = [WKJResponse new];

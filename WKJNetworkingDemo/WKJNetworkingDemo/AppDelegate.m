@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "WKJNetworking.h"
 
 @interface AppDelegate ()
 
@@ -14,38 +15,50 @@
 
 @implementation AppDelegate
 
-
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+    [self setupNetworking];
     return YES;
 }
 
-
-- (void)applicationWillResignActive:(UIApplication *)application {
-    // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-    // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
+/**
+ * 该方法可以单独封装至某个类
+ */
+- (void)setupNetworking
+{
+    /** 设置公共请求的参数 */
+    WKJNetworking.global(nil).header(@{@"Test-Key":@"123"}).timeout(10);
+    
+    /** 注册公共请求地址，可以在APPDelegate中使用 */
+    [WKJNetworking registBaseURL:@"http://web.juhe.cn:8080/finance/exchange"];
+    
+    /**
+     * 这里可以根据公司接口的数据格式做自定义回调配置，可以在APPDelegate中使用；
+     * 之后只要使用global构建的请求都会使用一下配置的回调（注：该方法仅支持global构建的请求）
+     *
+     * 如该网站数据格式统一为：{"resultcode":"200",
+     *                      "reason":"SUCCESSED!",
+     *                      "result":xxxxxxx}
+     * 则可以将回调内容更改如下：
+     */
+    [WKJNetworking registResponseBlock:^(id respones, NSError *error, RequestSuccess rs, RequestFail rf) {
+        // 处理网络错误回调
+        if (error.code == -1009) {
+            NSError *error = [NSError errorWithDomain:@"无网络连接" code:-1009 userInfo:nil];
+            rf(error);
+            return;
+        }
+        // 处理业务逻辑回调
+        if ([respones[@"resultcode"] intValue] == 200) {
+            rs(respones[@"result"]);
+        }
+        else {
+            NSError *error = [NSError errorWithDomain:respones[@"reason"]
+                                                 code:[respones[@"resultcode"] intValue]
+                                             userInfo:nil];
+            rf(error);
+        }
+    }];
 }
-
-
-- (void)applicationDidEnterBackground:(UIApplication *)application {
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-    // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-}
-
-
-- (void)applicationWillEnterForeground:(UIApplication *)application {
-    // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
-}
-
-
-- (void)applicationDidBecomeActive:(UIApplication *)application {
-    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-}
-
-
-- (void)applicationWillTerminate:(UIApplication *)application {
-    // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-}
-
 
 @end
