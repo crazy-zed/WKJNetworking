@@ -16,27 +16,27 @@
 可以根据公司的业务逻辑及接口的数据结构自定义响应回调的调用时机以及返回值，在AppDelegate（保证在所有请求开始之前调用即可）添加以下方法：
 		
 	/* 某接口返回数据格式如下：
-	 *	{
-	 *	 "code":"200",
-	 *	 "msg":"SUCCESSED!", 
-	 *	 "data":xxxxxxx
-	 *	}
+	 * {
+	 * 	"code":"200",
+	 *	"msg":"SUCCESSED!", 
+	 *	"data":xxxxxxx
+	 * }
 	 */
 	[WKJNetworking registResponseBlock:^(id respones, NSError *error, RequestSuccess rs, RequestFail rf) {
-		// 处理网络错误回调
-   		if (error.code == -1009) {
-   			NSError *error = [NSError errorWithDomain:@"无网络连接" code:-1009 userInfo:nil];
- 			rf(error);
-   			return;
-  		}
- 		// 处理业务逻辑回调
-    	if ([respones[@"code"] intValue] == 200) {
-    		rs(respones[@"data"]);
-   		}
-  		else {
-   			NSError *error = [NSError errorWithDomain:respones[@"msg"] code:[respones[@"code"] intValue] userInfo:nil];
-			rf(error);
-  		}
+	// 处理网络错误回调
+   	if (error.code == -1009) {
+   		NSError *error = [NSError errorWithDomain:@"无网络连接" code:-1009 userInfo:nil];
+ 		rf(error);
+   		return;
+  	}
+ 	// 处理业务逻辑回调
+   	if ([respones[@"code"] intValue] == 200) {
+   		rs(respones[@"data"]);
+   	}
+  	else {
+   		NSError *error = [NSError errorWithDomain:respones[@"msg"] code:[respones[@"code"] intValue] userInfo:nil];
+		rf(error);
+  	}
    	}];
 	
 ###3. 开始请求
@@ -56,20 +56,27 @@
 	WKJNetworking
     // 构建请求，传入完整URL
     .builder(@"http://api.xxxxxxx.com")
+    
     // 设置请求头
     .header(@{@"Test-Key":@"123"})
+    
     // 设置超时时间
     .timeout(10)
+    
     // 设置是否缓存（如果为YES，success回调会调用两次）
     .cache(NO)
+    
     // 开始请求
     .request()
+    
     // 使用GET方法，传入请求参数（更多方法请查看WKJNetworking.h文件）
     .get(params)
+    
     // 成功回调，该block不会发生循环引用
     .success(^(id respones) {
         // your code
     })
+    
     // 失败回调，该block不会发生循环引用
     .fail(^(NSError *error) {
         // your code
