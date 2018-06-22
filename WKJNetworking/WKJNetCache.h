@@ -18,4 +18,6 @@
 
 + (void)clearHttpCache;
 
++ (NSString *)getMD5String:(NSString *)string;
+
 @end

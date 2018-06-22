@@ -21,7 +21,7 @@
 
 @property (nonatomic, assign) WKJMediaType wkj_responseType;
 
-@property (nonatomic, assign) BOOL shouldCached;
+@property (nonatomic, strong) NSMutableDictionary *cacheInfo;
 
 @property (nonatomic, strong) NSDictionary *wkj_header;
 
@@ -39,7 +39,6 @@
 {
     WKJBuilder *builder = [[WKJBuilder alloc] init];
     builder.wkj_timeoutSec = 15;
-    builder.shouldCached = NO;
     builder.wkj_requestType = WKJMediaTypeFORM;
     builder.wkj_responseType = WKJMediaTypeJSON;
     return builder;
@@ -85,7 +84,8 @@
 {
     __weak typeof(self) weakSelf = self;
     return ^(BOOL shouldCached) {
-        weakSelf.shouldCached = shouldCached;
+        NSString *key = [WKJNetCache getMD5String:weakSelf.wkj_fullURL];
+        [weakSelf.cacheInfo setObject:@(shouldCached) forKey:key];
         return weakSelf;
     };
 }
@@ -98,12 +98,24 @@
         
         WKJRequest *req = [WKJRequest new];
         [req setValue:weakSelf forKey:@"builder"];
-        [req setValue:@(weakSelf.shouldCached) forKey:@"cached"];
+        
+        NSString *key = [WKJNetCache getMD5String:weakSelf.wkj_fullURL];
+        NSNumber *cached = [weakSelf.cacheInfo objectForKey:key];
+        cached = cached ? cached : NO;
+        [req setValue:cached forKey:@"cached"];
         
         WKJResponse *rsp = [WKJResponse new];
         [req setValue:rsp forKey:@"rsp"];
         return req;
     };
+}
+
+- (NSMutableDictionary *)cacheInfo
+{
+    if (!_cacheInfo) {
+        _cacheInfo = [[NSMutableDictionary alloc] init];
+    }
+    return _cacheInfo;
 }
 
 #pragma mark - Private
@@ -310,7 +322,7 @@
         if (cacheData) {
             dispatch_async(self.builder.manager.completionQueue ?: dispatch_get_main_queue(), ^{
                 if (self.builder.responseBlock) {
-                    self.builder.responseBlock(cacheData, self.rsp.rs, self.rsp.rf);
+                    self.builder.responseBlock(cacheData, nil, self.rsp.rs, self.rsp.rf);
                 }
                 else {
                     !self.rsp.rs ?: self.rsp.rs(cacheData);
@@ -340,9 +352,14 @@
     } completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
         
         if (error) {
-            if (self.rsp.rf) {
-                // 取消请求的错误不予返回
-                error.code == -999 ?: self.rsp.rf(error);
+            // 取消请求的错误不予返回
+            if (error.code != -999) {
+                if (self.builder.responseBlock && self.rsp.rf) {
+                    self.builder.responseBlock(responseObject, error, self.rsp.rs, self.rsp.rf);
+                }
+                else {
+                    !self.rsp.rf ?: self.rsp.rf(error);
+                }
             }
         }
         else {
@@ -350,8 +367,8 @@
                 [WKJNetCache setHttpCache:responseObject URL:self.builder.wkj_fullURL];
             }
             
-            if (self.builder.responseBlock) {
-                self.builder.responseBlock(responseObject, self.rsp.rs, self.rsp.rf);
+            if (self.builder.responseBlock && self.rsp.rs) {
+                self.builder.responseBlock(responseObject, nil, self.rsp.rs, self.rsp.rf);
             }
             else {
                 !self.rsp.rs ?: self.rsp.rs(responseObject);

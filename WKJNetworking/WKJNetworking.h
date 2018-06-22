@@ -42,7 +42,7 @@ typedef void (^RequestFail)(NSError *error);
 
 // WKJNetworking对象所属
 typedef WKJBuilder *(^WKJBuilderCreate)(NSString *url);
-typedef void (^WKJCustomerResponse)(id respones, RequestSuccess rs, RequestFail rf);
+typedef void (^WKJCustomerResponse)(id respones, NSError *error, RequestSuccess rs, RequestFail rf);
 
 // WKJBuilder对象所属
 typedef WKJBuilder *(^WKJTimeout)(NSTimeInterval sec);
@@ -81,7 +81,13 @@ typedef WKJResponse *(^WKJProgress)(RequestProgress rp);
 /** 注册基有URL，针对global构建对象使用（虽然也可以使用builder，但不建议）*/
 + (void)registBaseURL:(NSString *)baseURL;
 
-/** 注册自定义网络响应回调，可根据原有相应数据在做自定义处理，success参数： id respones（原有响应数据） RequestSuccess rs（成功回调） RequestFail rf（失败回调） */
+/** 注册自定义网络响应回调，可根据原有相应数据在做自定义处理
+ *  customResponse参数：
+ *  id respones（原始响应数据）
+ *  NSError *error（请求错误）
+ *  RequestSuccess rs（成功回调）
+ *  RequestFail rf（失败回调）
+ */
 + (void)registResponseBlock:(WKJCustomerResponse)customResponse;
 
 /** 暂停所有请求 */

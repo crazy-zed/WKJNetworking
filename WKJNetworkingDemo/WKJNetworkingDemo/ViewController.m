@@ -37,7 +37,14 @@
      *                      "result":xxxxxxx}
      * 则可以将回调内容更改如下：
      */
-    [WKJNetworking registResponseBlock:^(id respones, RequestSuccess rs, RequestFail rf) {
+    [WKJNetworking registResponseBlock:^(id respones, NSError *error, RequestSuccess rs, RequestFail rf) {
+        // 处理网络错误回调
+        if (error.code == -1009) {
+            NSError *error = [NSError errorWithDomain:@"无网络连接" code:-1009 userInfo:nil];
+            rf(error);
+            return;
+        }
+        // 处理业务逻辑回调
         if ([respones[@"resultcode"] intValue] == 200) {
             rs(respones[@"result"]);
         }
@@ -62,7 +69,7 @@
     // 设置超时时间
     .timeout(10)
     // 设置是否缓存（如果为YES，success回调会调用两次）
-    .cache(YES)
+    .cache(NO)
     // 开始请求
      .request()
     // 使用GET方法，传入请求参数（更多方法请查看WKJNetworking.h文件）
