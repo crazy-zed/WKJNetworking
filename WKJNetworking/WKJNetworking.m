@@ -10,7 +10,6 @@
 #import "AFNetworking.h"
 
 #pragma mark - -----------WKJBuilder-----------
-
 @interface WKJBuilder ()
 
 @property (nonatomic, copy) NSString *wkj_fullURL;
@@ -119,7 +118,6 @@
 }
 
 #pragma mark - Private
-
 - (void)setupManager
 {
     self.manager.requestSerializer.timeoutInterval = self.wkj_timeoutSec;
@@ -174,7 +172,6 @@
 @end
 
 #pragma mark - -----------WKJResponse-----------
-
 @interface WKJResponse ()
 
 @property (nonatomic, strong) NSURLSessionTask *task;
@@ -224,7 +221,6 @@
 @end
 
 #pragma mark - -----------WKJRequest-----------
-
 @interface WKJRequest ()
 
 @property (nonatomic, strong) WKJBuilder *builder;
@@ -294,7 +290,6 @@
 }
 
 #pragma mark - Private
-
 - (NSURLSessionDataTask *)requestMethod:(NSString *)method
                                  params:(NSDictionary *)params
                               bodyBlock:(void (^)(id <AFMultipartFormData> formData))bodyBlock
@@ -420,7 +415,6 @@
 }
 
 #pragma mark - Setup BodyBlock Method
-
 - (NSURLSessionDataTask *)uploadImages:(NSArray<UIImage *> *)images
                                 params:(NSDictionary *)params
                              imagesKey:(NSString *)imagesKey
@@ -459,7 +453,6 @@
 @end
 
 #pragma mark - -----------WKJNetworking-----------
-
 @implementation WKJNetworking
 
 static NSString *wkj_baseURL;

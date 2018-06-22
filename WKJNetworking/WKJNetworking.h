@@ -66,7 +66,6 @@ typedef WKJResponse *(^WKJFail)(RequestFail rf);
 typedef WKJResponse *(^WKJProgress)(RequestProgress rp);
 
 #pragma mark - 请求入口及相关请求状态操作
-
 @interface WKJNetworking : NSObject
 
 /** 创建请求构建对象，该构建对象每次请求都会创建新对象，针对单独请求构建方式。参数（NSString *url） */
@@ -111,7 +110,6 @@ typedef WKJResponse *(^WKJProgress)(RequestProgress rp);
 @end
 
 #pragma mark - 请求相关配置入口
-
 @interface WKJBuilder : NSObject
 
 /** 设置请求超时时间，参数为“NSTimeInterval”（默认15s） */
@@ -135,7 +133,6 @@ typedef WKJResponse *(^WKJProgress)(RequestProgress rp);
 @end
 
 #pragma mark - 请求具体方法入口
-
 @interface WKJRequest : NSObject
 
 /** 发起GET请求，参数为“NSDictionary” */
@@ -156,7 +153,6 @@ typedef WKJResponse *(^WKJProgress)(RequestProgress rp);
 @end
 
 #pragma mark - 请求响应操作入口
-
 @interface WKJResponse : NSObject
 
 /** 请求进度，参数为“RequestProgress回调” */
