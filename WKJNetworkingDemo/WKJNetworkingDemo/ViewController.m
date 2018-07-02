@@ -27,9 +27,9 @@
 - (IBAction)startRequest:(id)sender
 {
     // 使用global构建请求
-    [self globalRequest];
+//    [self globalRequest];
     // 使用builder构建请求
-//    [self builderRequest];
+    [self builderRequest];
 }
 
 - (void)globalRequest
@@ -71,7 +71,7 @@
     // 设置超时时间
     .timeout(10)
     // 设置是否缓存（如果为YES，success回调会调用两次）
-    .cache(NO)
+    .cache(YES)
     // 开始请求
     .request()
     // 使用GET方法，传入请求参数（更多方法请查看WKJNetworking.h文件）
