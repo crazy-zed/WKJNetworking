@@ -13,7 +13,7 @@
 
 @implementation WKJNetCache
 
-+ (void)setHttpCache:(id)data URL:(NSString *)URL
++ (void)setHttpCache:(id)data URL:(NSString *)URL params:(NSDictionary *)params
 {
     NSString *dirPath = [self getCachePath];
     NSFileManager *fm = [NSFileManager defaultManager];
@@ -28,7 +28,8 @@
         return;
     }
     
-    NSString *path = [dirPath stringByAppendingPathComponent:[self getMD5String:URL]];
+    NSString *key = [self cacheKeyWithURL:URL params:params];
+    NSString *path = [dirPath stringByAppendingPathComponent:[self getMD5String:key]];
     BOOL isOk = [NSKeyedArchiver archiveRootObject:data toFile:path];
     
     if (isOk) {
@@ -39,10 +40,11 @@
     }
 }
 
-+ (id)cacheForURL:(NSString *)URL
++ (id)cacheForURL:(NSString *)URL params:(NSDictionary *)params
 {
     NSString *dirPath = [self getCachePath];
-    NSString *path = [dirPath stringByAppendingPathComponent:[self getMD5String:URL]];
+    NSString *key = [self cacheKeyWithURL:URL params:params];
+    NSString *path = [dirPath stringByAppendingPathComponent:[self getMD5String:key]];
     
     id cache = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
     return cache;

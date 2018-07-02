@@ -313,7 +313,7 @@
     }
     
     if (self.cached) {
-        id cacheData = [WKJNetCache cacheForURL:self.builder.wkj_fullURL];
+        id cacheData = [WKJNetCache cacheForURL:self.builder.wkj_fullURL params:params];
         if (cacheData) {
             dispatch_async(self.builder.manager.completionQueue ?: dispatch_get_main_queue(), ^{
                 if (self.builder.responseBlock) {
@@ -348,7 +348,7 @@
         
         if (error) {
             // 取消请求的错误不予返回
-            if (error.code != -999) {
+            if (error.code != NSURLErrorCancelled) {
                 if (self.builder.responseBlock && self.rsp.rf) {
                     self.builder.responseBlock(responseObject, error, self.rsp.rs, self.rsp.rf);
                 }
@@ -359,7 +359,7 @@
         }
         else {
             if (self.cached) {
-                [WKJNetCache setHttpCache:responseObject URL:self.builder.wkj_fullURL];
+                [WKJNetCache setHttpCache:responseObject URL:self.builder.wkj_fullURL params:params];
             }
             
             if (self.builder.responseBlock && self.rsp.rs) {
@@ -402,7 +402,7 @@
         if (error) {
             if (self.rsp.rf) {
                 // 取消请求的错误不予返回
-                error.code == -999 ?: self.rsp.rf(error);
+                error.code == NSURLErrorCancelled ?: self.rsp.rf(error);
             }
         }
         else {

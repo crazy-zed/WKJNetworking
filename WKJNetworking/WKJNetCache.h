@@ -10,9 +10,9 @@
 
 @interface WKJNetCache : NSObject
 
-+ (void)setHttpCache:(id)data URL:(NSString *)URL;
++ (void)setHttpCache:(id)data URL:(NSString *)URL params:(NSDictionary *)params;
 
-+ (id)cacheForURL:(NSString *)URL;
++ (id)cacheForURL:(NSString *)URL params:(NSDictionary *)params;
 
 + (NSInteger)getHttpCacheSize;
 
