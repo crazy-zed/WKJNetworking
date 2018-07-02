@@ -4,7 +4,7 @@
 ## Cocoapods导入
 在Podfile中添加
 
-	pod 'WKJNetworking', '~> 1.0.2'
+	pod 'WKJNetworking', '~> 1.0.3'
 
 ## 使用方法
 ### 1. 注册基础URL

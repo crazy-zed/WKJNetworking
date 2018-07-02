@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
 ##项目名称
 s.name         = "WKJNetworking"
 ##版本号
-s.version      = "1.0.2"
+s.version      = "1.0.3"
 ##开源证书
 s.license      = { :type => "MIT", :file => "LICENSE" }
 ##项目简介
